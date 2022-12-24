@@ -1,0 +1,38 @@
+#!/bin/bash -i
+
+apt update
+
+#Install mysql
+apt install mysql-server -y
+
+#install sakila
+mkdir /home/sakila
+cd /home/sakila
+wget https://downloads.mysql.com/docs/sakila-db.tar.gz
+tar -xvzf sakila-db.tar.gz
+#Sakila config
+mysql -Bse "SOURCE /home/sakila/sakila-db/sakila-schema.sql;SOURCE /home/sakila/sakila-db/sakila-data.sql;"
+
+# Mysql configuration
+cat > /etc/mysql/mysql.conf.d/mysqld.cnf <<EOL
+[mysqld]
+server-id=3
+binlog-do-db=sakila
+relay_log = /var/log/mysql/mysql-relay-bin.log
+log_bin	= /var/log/mysql/mysql-bin.log
+EOL
+
+#Restart mysql server
+systemctl restart mysql
+
+#Connect slave node to master
+mysql -Bse "CHANGE MASTER TO MASTER_HOST='${MASTER_IP}', MASTER_USER='slave2', MASTER_LOG_FILE='${LOG_FILE}', MASTER_LOG_POS=${LOG_POS};"
+
+#Start replica
+mysql -Bse "START REPLICA;"
+
+#Create a user called proxy that will be used in the proxy server to reach the database
+mysql -Bse "CREATE USER 'proxy'@'%';GRANT ALL ON *.* TO 'proxy'@'%';"
+
+#Install sysbench
+apt install sysbench -y
