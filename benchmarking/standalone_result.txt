@@ -1,0 +1,39 @@
+Warning: Permanently added 'ec2-3-237-61-1.compute-1.amazonaws.com,3.237.61.1' (ECDSA) to the list of known hosts.
+sysbench 1.0.18 (using system LuaJIT 2.1.0-beta3)
+
+Running the test with following options:
+Number of threads: 8
+Target transaction rate: 50/sec
+Initializing random number generator from current time
+
+
+Initializing worker threads...
+
+Threads started!
+
+SQL statistics:
+    queries performed:
+        read:                            41034
+        write:                           11724
+        other:                           5862
+        total:                           58620
+    transactions:                        2931   (48.84 per sec.)
+    queries:                             58620  (976.87 per sec.)
+    ignored errors:                      0      (0.00 per sec.)
+    reconnects:                          0      (0.00 per sec.)
+
+General statistics:
+    total time:                          60.0061s
+    total number of events:              2931
+
+Latency (ms):
+         min:                                    5.39
+         avg:                                   10.67
+         max:                                   87.07
+         95th percentile:                       19.65
+         sum:                                34194.77
+
+Threads fairness:
+    events (avg/stddev):           366.3750/0.86
+    execution time (avg/stddev):   4.2743/0.09
+
